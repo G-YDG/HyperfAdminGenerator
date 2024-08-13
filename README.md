@@ -11,28 +11,6 @@ composer require ydg/hyperf-admin-generator
 
 # Usage
 
-## Generator Mapper
-
-```php
-<?php
-
-use HyperfAdminGenerator\MapperGenerator;
-
-(new MapperGenerator('your module', 'your table name'))->generator();
-
-```
-
-## Generator Service
-
-```php
-<?php
-
-use HyperfAdminGenerator\ServiceGenerator;
-
-(new ServiceGenerator('your module', 'your table name'))->generator();
-
-```
-
 ## Generator Controller
 
 ```php
@@ -44,7 +22,7 @@ use HyperfAdminGenerator\ControllerGenerator;
 
 ```
 
-## Generator Controller with more annotation
+## Generator Controller With More Annotation
 
 ```php
 <?php
@@ -55,7 +33,7 @@ use HyperfAdminGenerator\ControllerGenerator;
 
 ```
 
-example:
+Example:
 
 ```php
 <?php
@@ -82,7 +60,7 @@ use HyperfAdminGenerator\MapperGenerator;
 
 ```
 
-## Generator Request with Columns
+## Generator Request With Columns
 
 ```php
 <?php
@@ -93,7 +71,7 @@ use HyperfAdminGenerator\MapperGenerator;
 
 ```
 
-example in hyperf:
+Example in hyperf:
 
 ```php
 <?php
@@ -110,5 +88,27 @@ $resolver = container()->get(ConnectionResolverInterface::class);
 $columns = $resolver->connection()->getSchemaBuilder()->getColumnTypeListing($tableName);
 
 (new RequestGenerator($moduleName, $tableName, $columns))->generator();
+
+```
+
+## Generator Service
+
+```php
+<?php
+
+use HyperfAdminGenerator\ServiceGenerator;
+
+(new ServiceGenerator('your module', 'your table name'))->generator();
+
+```
+
+## Generator Mapper
+
+```php
+<?php
+
+use HyperfAdminGenerator\MapperGenerator;
+
+(new MapperGenerator('your module', 'your table name'))->generator();
 
 ```
