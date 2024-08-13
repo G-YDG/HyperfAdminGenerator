@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+namespace %NAMESPACE%;
+
+use HyperfAdminCore\Abstracts\AbstractService;
+use %MAPPER_NAMESPACE%;
+
+class %CLASS% extends AbstractService
+{
+    public $mapper;
+
+    public function __construct(%MAPPER_NAME% $mapper)
+    {
+        $this->mapper = $mapper;
+    }
+}

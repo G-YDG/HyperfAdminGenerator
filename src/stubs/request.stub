@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace %NAMESPACE%;
+
+use HyperfAdminCore\FormRequest;
+
+class %CLASS% extends FormRequest
+{
+    protected array $scenes = [
+        'save' => [
+%SAVE_SCENE%
+        ],
+        'update' => [
+%UPDATE_SCENE%
+        ],
+    ];
+
+    /**
+     * 验证规则
+     * @return string[]
+     */
+    public function rules(): array
+    {
+        return [
+%RULES%
+        ];
+    }
+
+    /**
+     * 字段映射名称
+     * return array
+     */
+    public function attributes(): array
+    {
+        return [
+%ATTRIBUTES%
+        ];
+    }
+}

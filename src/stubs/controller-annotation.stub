@@ -1,0 +1,77 @@
+<?php
+
+declare(strict_types=1);
+
+namespace %NAMESPACE%;
+
+use HyperfAdminCore\Abstracts\AbstractController;
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\Validation\Annotation\Scene;
+use Psr\Http\Message\ResponseInterface;
+use %SERVICE_NAMESPACE%;
+use %REQUEST_NAMESPACE%;
+use %ANNOTATION_NAMESPACE%;
+
+#[Controller(prefix: '%ROUTE%'), %ANNOTATION_NAME%]
+class %CLASS% extends AbstractController
+{
+    #[Inject]
+    protected %SERVICE_NAME% $service;
+
+    /**
+     * 分页列表
+     * @return ResponseInterface
+     */
+    #[GetMapping("index")]
+    public function index(): ResponseInterface
+    {
+        return $this->success($this->service->getPageList($this->request->all()));
+    }
+
+    /**
+     * 新增
+     * @param %REQUEST_NAME% $request
+     * @return ResponseInterface
+     */
+    #[PostMapping("save"), Scene(scene: 'save')]
+    public function save(%REQUEST_NAME% $request): ResponseInterface
+    {
+        return $this->success(['id' => $this->service->save($request->all())]);
+    }
+
+    /**
+     * 读取单个信息
+     * @param int $id
+     * @return ResponseInterface
+     */
+    #[GetMapping("read/{id}")]
+    public function read(int $id): ResponseInterface
+    {
+        return $this->success($this->service->read($id));
+    }
+
+    /**
+     * 更新
+     * @param int $id
+     * @param %REQUEST_NAME% $request
+     * @return ResponseInterface
+     */
+    #[PostMapping("update/{id}"), Scene(scene: 'update')]
+    public function update(int $id, %REQUEST_NAME% $request): ResponseInterface
+    {
+        return $this->service->update($id, $request->all()) ? $this->success() : $this->error();
+    }
+
+    /**
+     * 单个或批量删除
+     * @return ResponseInterface
+     */
+    #[PostMapping("delete")]
+    public function delete(): ResponseInterface
+    {
+        return $this->service->delete((array)$this->request->input('ids', [])) ? $this->success() : $this->error();
+    }
+}
