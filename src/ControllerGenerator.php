@@ -29,7 +29,7 @@ class ControllerGenerator extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        if (!empty($this->authClass)) {
+        if (!empty($this->annotation)) {
             return __DIR__ . '/stubs/controller-annotation.stub';
         }
         return __DIR__ . '/stubs/controller.stub';
