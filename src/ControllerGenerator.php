@@ -17,11 +17,14 @@ class ControllerGenerator extends AbstractGenerator
 {
     protected ?string $annotation;
 
-    public function __construct($module, $name, $annotation = null)
+    protected bool $isSimplifyName;
+
+    public function __construct($module, $name, $annotation = null, $isSimplifyName = false)
     {
         parent::__construct($module, $name);
 
         $this->annotation = $annotation;
+        $this->isSimplifyName = $isSimplifyName;
     }
 
     /**
@@ -86,7 +89,7 @@ class ControllerGenerator extends AbstractGenerator
      */
     protected function getClassName(): string
     {
-        return $this->name . 'Controller';
+        return $this->getSimplifyName() . 'Controller';
     }
 
     /**
@@ -126,11 +129,19 @@ class ControllerGenerator extends AbstractGenerator
      */
     protected function getControllerRoute(): string
     {
-        return sprintf(
-            '%s/%s',
-            Str::lcfirst($this->module),
-            Str::lcfirst($this->name)
-        );
+        return sprintf('%s/%s', Str::lcfirst($this->module), Str::lcfirst($this->getSimplifyName()));
+    }
+
+    /**
+     * 获取简化类名称.
+     * @return string
+     */
+    protected function getSimplifyName(): string
+    {
+        if ($this->isSimplifyName) {
+            return Str::replaceFirst($this->module, '', $this->name);
+        }
+        return $this->name;
     }
 
     /**
