@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace HyperfAdminGenerator;
 
 use Hyperf\Stringable\Str;
+
 use function Hyperf\Support\class_basename;
 
 class ControllerGenerator extends AbstractGenerator
@@ -32,7 +33,7 @@ class ControllerGenerator extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        if (!empty($this->annotation)) {
+        if (! empty($this->annotation)) {
             return __DIR__ . '/stubs/controller-annotation.stub';
         }
         return __DIR__ . '/stubs/controller.stub';
@@ -134,7 +135,6 @@ class ControllerGenerator extends AbstractGenerator
 
     /**
      * 获取简化类名称.
-     * @return string
      */
     protected function getSimplifyName(): string
     {

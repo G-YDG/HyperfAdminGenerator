@@ -12,7 +12,6 @@ namespace HyperfAdminGenerator;
 
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Database\ConnectionResolverInterface;
-use Hyperf\Stringable\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -23,14 +22,10 @@ class RequestGenerator extends AbstractGenerator
     protected array $filters = [];
 
     /**
-     * @param $module
-     * @param $name
-     * @param ?array $filters
-     * @param ?array $columns
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct($module, $name, array $filters = null, array $columns = null)
+    public function __construct($module, $name, ?array $filters = null, ?array $columns = null)
     {
         parent::__construct($module, $name);
 
@@ -38,29 +33,29 @@ class RequestGenerator extends AbstractGenerator
         $this->columns = $columns ?? [];
 
         if (empty($this->columns)) {
-            $this->initColumns();
-        }
-    }
-
-    /**
-     * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function initColumns(): void
-    {
-        $resolver = ApplicationContext::getContainer()->get(ConnectionResolverInterface::class);
-        $this->columns = $resolver->connection()->getSchemaBuilder()->getColumnTypeListing(Str::snake($this->name));
-        if (!empty($this->filters)) {
-            $this->columns = array_filter($this->columns, function ($column) {
-                return !in_array($column['column_name'], $this->filters);
-            });
+            $this->initColumns($name);
         }
     }
 
     public function qualifyClass(): string
     {
         return parent::qualifyClass() . 'Request';
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function initColumns($table): void
+    {
+        $resolver = ApplicationContext::getContainer()->get(ConnectionResolverInterface::class);
+
+        $this->columns = $resolver->connection()->getSchemaBuilder()->getColumnTypeListing($table);
+        if (! empty($this->filters)) {
+            $this->columns = array_filter($this->columns, function ($column) {
+                return ! in_array($column['column_name'], $this->filters);
+            });
+        }
     }
 
     /**
@@ -183,7 +178,7 @@ class RequestGenerator extends AbstractGenerator
             "%s'%s' => '%s',\n",
             $space,
             $column['column_name'],
-            !empty($column['column_comment']) ? $column['column_comment'] : $column['column_name']
+            ! empty($column['column_comment']) ? $column['column_comment'] : $column['column_name']
         );
     }
 }
