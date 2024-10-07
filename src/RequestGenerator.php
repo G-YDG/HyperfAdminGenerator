@@ -25,7 +25,7 @@ class RequestGenerator extends AbstractGenerator
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct($module, $name, ?array $filters = null, ?array $columns = null)
+    public function __construct($module, $name, ?array $filters = null, ?array $columns = null, ?string $pool = null)
     {
         parent::__construct($module, $name);
 
@@ -33,7 +33,7 @@ class RequestGenerator extends AbstractGenerator
         $this->columns = $columns ?? [];
 
         if (empty($this->columns)) {
-            $this->initColumns($name);
+            $this->initColumns($name, $pool);
         }
     }
 
@@ -46,11 +46,11 @@ class RequestGenerator extends AbstractGenerator
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function initColumns($table): void
+    protected function initColumns($table, $pool): void
     {
         $resolver = ApplicationContext::getContainer()->get(ConnectionResolverInterface::class);
 
-        $this->columns = $resolver->connection()->getSchemaBuilder()->getColumnTypeListing($table);
+        $this->columns = $resolver->connection($pool)->getSchemaBuilder()->getColumnTypeListing($table);
         if (! empty($this->filters)) {
             $this->columns = array_filter($this->columns, function ($column) {
                 return ! in_array($column['column_name'], $this->filters);
